@@ -235,16 +235,13 @@ def main():
         args.model_name_or_path, fast_tokenizer=True
     )
     tokenizer.pad_token = tokenizer.eos_token
-    tokenizer.padding_side = "right"
-
-
-    rm_model = create_critic_model(
-        args.model_name_or_path,
-        tokenizer,
-        ds_config,
-        args.num_padding_at_beginning,
-        disable_dropout=args.disable_dropout,
-    )
+    # make sure tokenizer is right pad in our logic
+    tokenizer.padding_side = 'right'
+    rm_model = create_critic_model(args.model_name_or_path,
+                                   tokenizer,
+                                   ds_config,
+                                   args.num_padding_at_beginning,
+                                   disable_dropout=args.disable_dropout)
 
     if args.lora_dim > 0:
         rm_model = convert_linear_layer_to_lora(
